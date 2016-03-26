@@ -3,28 +3,13 @@ minimal settings file - DO NOT RUN IN PRODUCTION!
 """
 
 
-###################################################
-## SLACK-SPECIFIC SETTINGS (REQUIRED)
-SLACK_ACCESS = {
-    # the keys in this dict correspond to the Slack access tokens that have been generated
-    # in the Slack integration page (for each Slack team that uses this plugin the key must
-    # exist in the above array, lest access will be denied)
-    'ULtA9InSFLTGpEz0EsMkVBKl': True,
-}
-    
-SLACK_USERS = {
-    # that is currently needed for the code to run, but it is deprecated
-    # the whole access control mechanism is being reviewed
-    'U0CIOKE53U': 3,
-}
-
-
-###################################################
-## GENERAL SETTINGS
 import os
+import dj_database_url as dburl
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'f&pppjiw^qpup1_*02+)yeoli3-p@t(-+gwo7s&g*akgv=bfis'
+    # DO NOT FORGET TO CHANGE THE SECRET KEY!
+
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
