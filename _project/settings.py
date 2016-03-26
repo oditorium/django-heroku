@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import dj_database_url as dburl
+
+def environ(key):
+    """returns True if the key exists in os.environ[] and it is not false'ish"""
+    if not key in os.environ.keys(): return False
+    if os.environ[key] and os.environ[key] != '0': return True
+    return False
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,11 +29,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'f&pppjiw^qpup1_*02+)yeoli3-p@t(-+gwo7s&g*akgv=bfis'
+    # DO NOT FORGET TO CHANGE THE SECRET KEY!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,7 +46,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'myapp',
 ]
+
+if environ('SSLSERVER'):
+    # to launch the sslserver use the following command:
+    #    export SSLSERVER=1
+    #    export CERTS=/path/to/my/cert
+    #    python3 manage.py runsslserver 0.0.0.0:443 --certificate $CERTS.crt --key $CERTS.key
+    INSTALLED_APPS += ['sslserver']
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,18 +103,10 @@ DATABASES = {
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 
@@ -105,13 +114,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
@@ -119,3 +124,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR + '/staticfiles'
+
+
+if environ('HEROKU'):
+    
+    # this assumes the on Heroku an environment called 'HEROKU' is set and true'ish
+    # the below code adusts the settings accordingly
+    # 
+    # to create an app on Heroku and set the environment set
+    #   heroku create
+    #   git push heroku +master
+    #   heroku config:set HEROKU=1
+    #   heroku run python manage.py migrate
+    DEBUG = False
+    if environ ('DEBUG'):
+        print("***** ATTENTION: Debug mode is one (DEBUG is true'ish) *****")
+        DEBUG = True
+    DATABASES['default'] =  dburl.config()
+    DATABASES['default']['CONN_MAX_AGE'] = 500
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    WSGI_APPLICATION = '_project.wsgi-whitenoise.application'
