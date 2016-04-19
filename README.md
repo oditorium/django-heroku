@@ -56,7 +56,6 @@ Contributions welcome. Send us a pull request!
 
 The idea is to use [semantic versioning](http://semver.org/), even though initially we might make some minor
 API changes without bumping the major version number. Be warned!
-
 - **v0.9.1** recreated settings from a complete settings file (minimal settings file in branch `minimal`)
 - **v0.9** Initial Release, copied from [django-slack][djslack]
 
