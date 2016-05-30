@@ -1,0 +1,6 @@
+{
+  "name": "Django Heroku",
+  "description": "Basic Django template for deployment on Heroku",
+  "repository": "https://github.com/oditorium/django-heroku",
+  "keywords": ["Django", "Heroku", "Template", "oditorium"]
+}

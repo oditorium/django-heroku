@@ -1,7 +1,7 @@
 # django-heroku
 _A Django Template Project for Heroku_
 
-## Installation
+## Manual Installation
 
 After installing the Heroku [Toolbelt](https://toolbelt.heroku.com/) run the following commands:
 
@@ -10,8 +10,6 @@ After installing the Heroku [Toolbelt](https://toolbelt.heroku.com/) run the fol
 	heroku create
 	heroku config:set HEROKU=1
 	git push heroku +master
-
-	
 
 ### Whitenoise
 
@@ -45,6 +43,24 @@ The file `wsgi-whitenoise.py` should be as follows
 	from whitenoise.django import DjangoWhiteNoise
 	application = DjangoWhiteNoise( get_wsgi_application() )
 
+
+### Setup
+
+Once the installation is finished, create a superuser by doing
+
+	heroko run ./manage.py createsuperuser
+
+
+## Installation Button
+
+You can directly deploy this repo in Heroku by clicking the button below
+(you will have to create a free account)
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+Provided you have set up your heroku toolchain you can create a superuser by doing
+
+	heroko run ./manage.py createsuperuser --app <appname> 
 
 ## Contributions
 
